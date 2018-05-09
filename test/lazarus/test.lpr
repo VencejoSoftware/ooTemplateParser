@@ -7,7 +7,8 @@ program test;
 
 uses
   ooRunTest,
-  TemplateParser_test in '..\code\TemplateParser_test.pas';
+  ooTagSubstitute_test in '..\code\ooTagSubstitute_test.pas',
+  ooTagSubstitute in '..\..\code\ooTagSubstitute.pas';
 
 {R *.RES}
 

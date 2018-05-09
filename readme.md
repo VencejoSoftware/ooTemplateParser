@@ -4,10 +4,27 @@
 Code to use text templates in pascal code
 
 ### Documentation
-If not exists folder "code-documentation" then run the batch "build_doc". The main entry is ./doc/index.html
+If not exists folder "doc" then run the batch "build_doc". The main entry is ./doc/index.html
+
+### Example
+```pascal
+var
+  TagSubstitute: IParser;
+  TemplateTagList: IParserElementList<IParserElement>;
+  Text: String;
+begin
+  TemplateTagList := TParserElementList<IParserElement>.New;
+  TagSubstitute := TTagSubstitute.New('<<', '>>', TemplateTagList, TTextMatchWordInsensitive.New);
+  TemplateTagList.Add(TParserConstant.New('A', 'A-Value'));
+  TemplateTagList.Add(TParserConstant.New('B', 'B-Value'));
+  TemplateTagList.Add(TParserConstant.New('C', 'C-Value'));
+  Text := TagSubstitute.Evaluate('Test value for <<A>> and <<C>> and <<C>>'));
+  // Text = 'Test value for A-Value and C-Value and C-Value'
+end;
+```
 
 ### Demo
-See tests code for examples of use.
+See demo folder.
 
 ## Built With
 * [Delphi&reg;](https://www.embarcadero.com/products/rad-studio) - Embarcadero&trade; commercial IDE
