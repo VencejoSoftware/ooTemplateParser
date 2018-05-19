@@ -8,7 +8,8 @@ program test;
 uses
   ooRunTest,
   ooTagSubstitute_test in '..\code\ooTagSubstitute_test.pas',
-  ooTagSubstitute in '..\..\code\ooTagSubstitute.pas';
+  ooTagSubstitute in '..\..\code\ooTagSubstitute.pas',
+  ooParser.ElementList in '..\..\..\ooParser\code\ooParser.ElementList.pas';
 
 {R *.RES}
 
