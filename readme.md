@@ -29,6 +29,7 @@ See the project example at the demo folder.
 
 ## Dependencies
 * [ooGeneric](https://github.com/VencejoSoftware/ooGeneric.git) - Generic object oriented list
+* [ooText](https://github.com/VencejoSoftware/ooText.git) - Object pascal string library
 * [ooParser](https://github.com/VencejoSoftware/ooParser.git) - Interfaces to build a text parser
 
 ## Built With
