@@ -10,15 +10,16 @@
   @author Vencejo Software <www.vencejosoft.com>
 }
 {$ENDREGION}
-unit ooTagSubstitute;
+unit TagSubstitute;
 
 interface
 
 uses
   SysUtils,
-  ooText.Match.Intf, ooText.Replace,
-  ooText.Match.WordInsensitive,
-  ooParser.Element.Intf, ooParser.ElementList, ooParser;
+  Text,
+  TextMatch, ReplaceText,
+  InsensitiveWordMatch,
+  ParserElement, ParserElementList, Parser;
 
 type
 {$REGION 'documentation'}
@@ -79,7 +80,7 @@ end;
 
 function TTagSubstitute.ReplaceTag(const Text, Tag, Value: String): String;
 begin
-  Result := TTextReplace.NewFromString(Text, _TextMatch).AllMatches(Tag, Value);
+  Result := TReplaceText.New(_TextMatch).AllMatches(TText.New(Text), TText.New(Tag), TText.New(Value), 1).Value;
 end;
 
 function TTagSubstitute.Evaluate(const Text: String): String;

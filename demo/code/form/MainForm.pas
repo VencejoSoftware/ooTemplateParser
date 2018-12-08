@@ -1,3 +1,8 @@
+{
+  Copyright (c) 2018, Vencejo Software
+  Distributed under the terms of the Modified BSD License
+  The full license is distributed with this software
+}
 unit MainForm;
 
 interface
@@ -5,10 +10,10 @@ interface
 uses
   Windows, SysUtils, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls, DateUtils,
-  ooParser, ooParser.Element.Intf, ooParser.ElementList,
-  ooParser.Callback, ooParser.Variable, ooParser.Constant,
-  ooTagSubstitute,
-  ooText.Match.WordInsensitive, ooText.Match.WordSensitive;
+  Parser, ParserElement, ParserElementList,
+  ParserCallback, ParserVariable, ParserConstant,
+  TagSubstitute,
+  InsensitiveWordMatch, SensitiveWordMatch;
 
 type
   TMainForm = class(TForm)
@@ -69,7 +74,7 @@ end;
 
 procedure TMainForm.btnApplyClick(Sender: TObject);
 begin
-  lbResult.Caption := TTagSubstitute.New('[<', '>]', _TemplateTagList, TTextMatchWordInsensitive.New)
+  lbResult.Caption := TTagSubstitute.New('[<', '>]', _TemplateTagList, TInsensitiveWordMatch.NewDefault)
     .Evaluate(edTemplate.Text)
 end;
 
