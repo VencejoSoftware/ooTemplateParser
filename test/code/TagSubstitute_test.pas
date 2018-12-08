@@ -3,16 +3,16 @@
   Distributed under the terms of the Modified BSD License
   The full license is distributed with this software
 }
-unit ooTagSubstitute_test;
+unit TagSubstitute_test;
 
 interface
 
 uses
   SysUtils, DateUtils,
-  ooParser, ooParser.Element.Intf, ooParser.ElementList,
-  ooParser.Callback, ooParser.Variable, ooParser.Constant,
-  ooTagSubstitute,
-  ooText.Match.WordInsensitive, ooText.Match.WordSensitive,
+  Parser, ParserElement, ParserElementList,
+  ParserCallback, ParserVariable, ParserConstant,
+  TagSubstitute,
+  SensitiveWordMatch, InsensitiveWordMatch,
 {$IFDEF FPC}
   fpcunit, testregistry
 {$ELSE}
@@ -111,7 +111,7 @@ begin
   TemplateTagList.Add(TParserVariable.New('M', TParserCallback.New(GetMonthCallback)));
   TemplateTagList.Add(TParserVariable.New('Y', TParserCallback.New(GetYearCallback)));
   TemplateTagList.Add(TParserVariable.New('DATE', TParserCallback.New(GetDateCallback)));
-  TagSubstitute := TTagSubstitute.New('[<', '>]', TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New('[<', '>]', TemplateTagList, TInsensitiveWordMatch.NewDefault);
   CheckEquals(Format('Current date: %s-%s-%s or [%s]', [GetDay, GetMonth, GetYear, GetDate]),
     TagSubstitute.Evaluate('Current date: [<D>]-[<M>]-[<Y>] or [[<dAtE>]]'));
 end;
@@ -122,7 +122,7 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New('<<', '>>', TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New('<<', '>>', TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserConstant.New('A', 'A-Value'));
   TemplateTagList.Add(TParserConstant.New('B', 'B-Value'));
   TemplateTagList.Add(TParserConstant.New('C', 'C-Value'));
@@ -136,9 +136,10 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New(':', EmptyStr, TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New(':', EmptyStr, TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('D', TParserCallback.New(GetDayCallback)));
-  CheckEquals(Format('Test %s:D D: none, %s', [GetDay, GetDay]), TagSubstitute.Evaluate('Test :D:D D: none, :D'));
+  CheckEquals(Format('Test %s%s D: none, %s', [GetDay, GetDay, GetDay]),
+    TagSubstitute.Evaluate('Test :D:D D: none, :D'));
 end;
 
 procedure TTagSubstituteTest.TestEvaluateLastDelimiter;
@@ -147,7 +148,7 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New(EmptyStr, '@', TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New(EmptyStr, '@', TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('D', TParserCallback.New(GetDayCallback)));
   CheckEquals(Format('Test :D %s none, D@%s', [GetDay, GetDay]), TagSubstitute.Evaluate('Test :D D@ none, D@D@'));
 end;
@@ -158,7 +159,7 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New('{', '}', TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New('{', '}', TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('D', TParserCallback.New(GetDayCallback)));
   CheckEquals(Format('Test %s {D none, D}', [GetDay]), TagSubstitute.Evaluate('Test {D} {D none, D}'));
 end;
@@ -169,9 +170,9 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New(':', EmptyStr, TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New(':', EmptyStr, TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('D', TParserCallback.New(GetDayCallback)));
-  CheckEquals(Format('Test %s:D D: none, %s,%s', [GetDay, GetDay, GetDay]),
+  CheckEquals(Format('Test %s%s D: none, %s,%s', [GetDay, GetDay, GetDay, GetDay]),
     TagSubstitute.Evaluate('Test :D:D D: none, :D,:D'));
 end;
 
@@ -181,7 +182,7 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New(EmptyStr, ':', TemplateTagList, TTextMatchWordInsensitive.New);
+  TagSubstitute := TTagSubstitute.New(EmptyStr, ':', TemplateTagList, TInsensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('D', TParserCallback.New(GetDayCallback)));
   CheckEquals(Format('Test :D:D %s none, %s,%s', [GetDay, GetDay, GetDay]),
     TagSubstitute.Evaluate('Test :D:D D: none, D:,D:'));
@@ -193,7 +194,7 @@ var
   TemplateTagList: IParserElementList<IParserElement>;
 begin
   TemplateTagList := TParserElementList<IParserElement>.New;
-  TagSubstitute := TTagSubstitute.New('{{', '}}', TemplateTagList, TTextMatchWordSensitive.New);
+  TagSubstitute := TTagSubstitute.New('{{', '}}', TemplateTagList, TSensitiveWordMatch.NewDefault);
   TemplateTagList.Add(TParserVariable.New('d', TParserCallback.New(GetDayCallback)));
   CheckEquals(Format('Test {{D}} none %s', [GetDay]), TagSubstitute.Evaluate('Test {{D}} none {{d}}'));
 end;

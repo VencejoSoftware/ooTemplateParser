@@ -6,10 +6,9 @@
 program test;
 
 uses
-  ooRunTest,
-  ooTagSubstitute_test in '..\code\ooTagSubstitute_test.pas',
-  ooTagSubstitute in '..\..\code\ooTagSubstitute.pas',
-  ooParser.ElementList in '..\..\..\ooParser\code\ooParser.ElementList.pas';
+  RunTest,
+  TagSubstitute_test in '..\code\TagSubstitute_test.pas',
+  TagSubstitute in '..\..\code\TagSubstitute.pas';
 
 {R *.RES}
 
